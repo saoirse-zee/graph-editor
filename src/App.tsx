@@ -48,7 +48,7 @@ const App = () => {
     const value = parseInt(e.target.value);
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
-  const append = () => {
+  const handleAppend = () => {
     const newId = id++;
     const node = createNode(newId);
     const last = row.getLast();
@@ -61,10 +61,12 @@ const App = () => {
     setRow(newRow);
   };
   const handleNext = () => {
-    const current = list.find(selected);
+    const current = row.find(selected);
     const next = current.getNext();
     if (next) {
-      setSelected(next.getId());
+      const nextId = next.getId();
+      console.log(nextId);
+      setSelected(nextId);
     }
   };
   const handlePrev = () => {
@@ -72,8 +74,9 @@ const App = () => {
     // To fix once node.prev() is implemented.
     setSelected(Math.max(selected - 1, 0));
   };
-  const handleNudge = (direction: Direction) => {
-    const node = row.find(selected);
+  const handleNudge = (direction: Direction, id: number) => {
+    console.log(selected, id);
+    const node = row.find(id);
     const point = node.getData();
     const xOffset =
       direction === Direction.RIGHT ? 5 : direction === Direction.LEFT ? -5 : 0;
@@ -90,12 +93,12 @@ const App = () => {
 
   return (
     <HotKeys
-      keyMap={{ APPEND: "a", RIGHT: "right", L: "l" }}
-      handlers={{
-        APPEND: append,
-        RIGHT: () => handleNudge(Direction.RIGHT),
-        L: () => handleNudge(Direction.RIGHT)
-      }}
+      keyMap={{ APPEND: "a",
+      RIGHT: ["command+right"], 
+      LEFT: ["command+left"],
+      UP: ["command+up"],
+      DOWN: ["command+down"],
+     }}
     >
       <div className="App">
         {selected}
@@ -107,7 +110,8 @@ const App = () => {
             handleMapClick,
             handleXChange,
             handleYChange,
-            handleNudge
+            handleNudge,
+            handleAppend,
           }}
           state={{
             selected,

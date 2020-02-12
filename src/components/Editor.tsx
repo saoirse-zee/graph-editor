@@ -4,10 +4,10 @@ import Container from "./Container";
 import { Direction } from "../types/types";
 
 type State = {
-  selected: number
-  selectedPoint: number[]
-  row: any
-}
+  selected: number;
+  selectedPoint: number[];
+  row: any;
+};
 
 type EditorProps = {
   handlers: any;
@@ -17,8 +17,15 @@ type EditorProps = {
 export const Editor = ({ handlers, state }: EditorProps) => {
   const rowNodes: any[] = state.row.toArray();
   const lineData = rowToLineData(rowNodes);
+  const editorHandlers = {
+    APPEND: handlers.handleAppend,
+    RIGHT: () => handlers.handleNudge(Direction.RIGHT, state.selected),
+    LEFT: () => handlers.handleNudge(Direction.LEFT),
+    UP: () => handlers.handleNudge(Direction.UP),
+    DOWN: () => handlers.handleNudge(Direction.DOWN)
+  };
   return (
-    <HotKeys handlers={handlers}>
+    <HotKeys handlers={editorHandlers}>
       <div className="App">
         <div style={{ display: "flex", fontFamily: "monospace" }}>
           <div style={{ marginRight: 50 }}>
@@ -52,7 +59,7 @@ export const Editor = ({ handlers, state }: EditorProps) => {
         <button onClick={() => handlers.handleNudge(Direction.DOWN)}>
           Nudge down
         </button>
-        <Container handleClick={handlers.handleMapClick}>
+        <Container handleClick={() => {}}>
           <g
             onClick={e => {
               console.log(e);
