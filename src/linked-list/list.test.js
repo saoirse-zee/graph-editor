@@ -18,14 +18,14 @@ test("can get the last node", () => {
   fakeNode.setData("2");
   const fakeNode2 = createNode();
   fakeNode2.setData("3");
-  fakeNode.setNext(fakeNode2)
+  fakeNode.setNext(fakeNode2);
   root.setNext(fakeNode);
 
   // Create a list
   const list = createList(root);
 
   // Get the last node and make sure it's correct.
-  const last = list.getLast()
+  const last = list.getLast();
   expect(last.getData()).toEqual("3");
 });
 
@@ -33,68 +33,148 @@ test("can append a node to a list with one node", () => {
   const root = createNode();
   root.setData("root");
   const list = createList(root);
-  const newNode = createNode()
-  newNode.setData('new')
-  list.append(newNode)
+  const newNode = createNode();
+  newNode.setData("new");
+  list.append(newNode);
 
-  const last = list.getLast()
+  const last = list.getLast();
   expect(last.getData()).toEqual("new");
 });
 
 test("can append a node to a list with multiple nodes", () => {
   const root = createNode();
-  const n1 = createNode()
-  const n2 = createNode()
-  const n3 = createNode()
+  const n1 = createNode();
+  const n2 = createNode();
+  const n3 = createNode();
 
   root.setData("root");
-  n1.setData('1')
-  n2.setData('2')
-  n3.setData('3')
-  
-  const list = createList(root);
-  list.append(n1)
-  list.append(n2)
-  list.append(n3)
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
 
-  const last = list.getLast()
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+
+  const last = list.getLast();
   expect(last.getData()).toEqual("3");
 });
 
-test('stringify creates a pretty string representation of the list', () => {
+test("stringify creates a pretty string representation of the list", () => {
   const root = createNode();
-  const n1 = createNode()
-  const n2 = createNode()
-  const n3 = createNode()
+  const n1 = createNode();
+  const n2 = createNode();
+  const n3 = createNode();
 
   root.setData("root");
-  n1.setData('1')
-  n2.setData('2')
-  n3.setData('3')
-  
-  const list = createList(root);
-  list.append(n1)
-  list.append(n2)
-  list.append(n3)
-  const string = list.stringify()
-  expect(string).toBe('root -> 1 -> 2 -> 3')
-})
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
 
-test('toArray converts the list to an array', () => {
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+  const string = list.stringify();
+  expect(string).toBe("root -> 1 -> 2 -> 3");
+});
+
+test("toArray converts the list to an array", () => {
   const root = createNode();
-  const n1 = createNode()
-  const n2 = createNode()
-  const n3 = createNode()
+  const n1 = createNode();
+  const n2 = createNode();
+  const n3 = createNode();
 
   root.setData("root");
-  n1.setData('1')
-  n2.setData('2')
-  n3.setData('3')
-  
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
+
   const list = createList(root);
-  list.append(n1)
-  list.append(n2)
-  list.append(n3)
-  const array = list.toArray()
-  expect(array.length).toBe(4)
-})
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+  const array = list.toArray();
+  expect(array.length).toBe(4);
+});
+
+test("find returns an existing node", () => {
+  const root = createNode(0);
+  const n1 = createNode(1);
+  const n2 = createNode(2);
+  const n3 = createNode(3);
+
+  root.setData("root");
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
+
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+
+  const myNode = list.find(2);
+  expect(myNode.getData()).toBe("2");
+});
+
+test("find can find the root node", () => {
+  const root = createNode(0);
+  const n1 = createNode(1);
+  const n2 = createNode(2);
+  const n3 = createNode(3);
+
+  root.setData("root");
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
+
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+
+  const myNode = list.find(0);
+  expect(myNode.getData()).toBe("root");
+});
+
+test("find can find the last node", () => {
+  const root = createNode(0);
+  const n1 = createNode(1);
+  const n2 = createNode(2);
+  const n3 = createNode(3);
+
+  root.setData("root");
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
+
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+
+  const myNode = list.find(3);
+  expect(myNode.getData()).toBe("3");
+});
+
+test("find returns false if the requested node does not exist", () => {
+  const root = createNode(0);
+  const n1 = createNode(1);
+  const n2 = createNode(2);
+  const n3 = createNode(3);
+
+  root.setData("root");
+  n1.setData("1");
+  n2.setData("2");
+  n3.setData("3");
+
+  const list = createList(root);
+  list.append(n1);
+  list.append(n2);
+  list.append(n3);
+
+  const myNode = list.find(17);
+  expect(myNode).toBe(false);
+});

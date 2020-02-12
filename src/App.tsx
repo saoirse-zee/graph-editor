@@ -60,17 +60,15 @@ const App = () => {
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
   const handleRight = () => {
-    // Find the node with id selected.
-    // Get it's "next". 
-    // if next exists, set next's id to selected.
-    // else, do nothing.
-
-    // this is a hacky way to move the id along
-    setSelected(selected + 1);
+    const current = list.find(selected);
+    const next = current.getNext();
+    if (next) {
+      setSelected(next.getId());
+    }
   };
   const handleLeft = () => {
-    setSelected(selected - 1)
-  }
+    setSelected(selected - 1);
+  };
 
   return (
     <HotKeys

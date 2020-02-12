@@ -28,6 +28,13 @@ const createList = head => {
     string += currentNode.getData();
     return string;
   };
+  const find = id => {
+    let currentNode = _head;
+    while (currentNode && currentNode.getId() !== id) {
+      currentNode = currentNode.getNext();
+    }
+    return currentNode || false;
+  };
   const toArray = () => {
     const array = [];
     let currentNode = _head;
@@ -38,11 +45,13 @@ const createList = head => {
     array.push(currentNode);
     return array;
   };
+
   return {
     getHead,
     getLast,
     append,
     stringify,
+    find,
     toArray
   };
 };
