@@ -1,5 +1,10 @@
 import { createNode } from ".";
 
+test("new node has the given id", () => {
+  const node = createNode(17);
+  expect(node.getId()).toBe(17);
+});
+
 test("new node has default data value", () => {
   const node = createNode();
   expect(node.getData()).toBe("");

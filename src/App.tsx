@@ -4,10 +4,12 @@ import { createList, createNode } from "./linked-list";
 import Container from "./components/Container";
 import "./App.css";
 
+let id = 0;
+
 // Temporary test data.
-const n1 = createNode();
-const n2 = createNode();
-const n3 = createNode();
+const n1 = createNode(id++);
+const n2 = createNode(id++);
+const n3 = createNode(id++);
 n1.setData([100, 130]);
 n2.setData([110, 135]);
 n3.setData([215, 170]);
@@ -37,14 +39,14 @@ const App = () => {
   // Handlers
   const handleAddClick = (e: any) => {
     e.preventDefault();
-    const node = createNode();
+    const node = createNode(id++);
     node.setData([inputX, inputY]);
     row.append(node);
     const newRow = Object.assign({}, row);
     setRow(newRow);
   };
   const handleMapClick = (coords: number[]) => {
-    const node = createNode();
+    const node = createNode(id++);
     node.setData(coords);
     row.append(node);
     const newRow = Object.assign({}, row);
@@ -109,9 +111,9 @@ const App = () => {
               strokeWidth={3}
               opacity={0.3}
             />
-            {rowNodes.map((n, i) => (
+            {rowNodes.map(n => (
               <circle
-                key={i}
+                key={n.getId()}
                 cx={n.getData()[0]}
                 cy={n.getData()[1]}
                 r={5}
