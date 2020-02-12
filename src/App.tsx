@@ -41,6 +41,13 @@ const App = () => {
     const newRow = Object.assign({}, row);
     setRow(newRow);
   };
+  const handleMapClick = (coords: number[]) => {
+    const node = createNode();
+    node.setData(coords);
+    row.append(node);
+    const newRow = Object.assign({}, row);
+    setRow(newRow);
+  };
   const handleXChange = (e: any) => {
     const value = parseInt(e.target.value);
     setInputX(isNaN(value) ? 0 : value); // Default to zero.
@@ -49,8 +56,6 @@ const App = () => {
     const value = parseInt(e.target.value);
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
-
-  console.log(list.stringify());
 
   return (
     <div className="App">
@@ -65,17 +70,29 @@ const App = () => {
         </div>
         <button>Add</button>
       </form>
-      <Container>
-        <polyline points={lineData} fill="none" stroke="white" strokeWidth={3} opacity={0.3} />
-        {rowNodes.map((n, i) => (
-          <circle
-            key={i}
-            cx={n.getData()[0]}
-            cy={n.getData()[1]}
-            r={5}
-            fill={"white"}
+      <Container handleClick={handleMapClick}>
+        <g
+          onClick={e => {
+            console.log(e);
+          }}
+        >
+          <polyline
+            points={lineData}
+            fill="none"
+            stroke="white"
+            strokeWidth={3}
+            opacity={0.3}
           />
-        ))}
+          {rowNodes.map((n, i) => (
+            <circle
+              key={i}
+              cx={n.getData()[0]}
+              cy={n.getData()[1]}
+              r={5}
+              fill={"white"}
+            />
+          ))}
+        </g>
       </Container>
     </div>
   );
