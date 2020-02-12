@@ -30,8 +30,7 @@ const App = () => {
   const [inputX, setInputX] = useState();
   const [inputY, setInputY] = useState();
   const [row, setRow] = useState(list);
-  const [selected, setSelected] = useState();
-  console.log(selected && selected.getData());
+  const [selected, setSelected] = useState(0);
 
   const rowNodes = row.toArray();
   const lineData = rowToLineData(rowNodes);
@@ -61,29 +60,23 @@ const App = () => {
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
   const handleRight = () => {
-    console.log("right");
-    // If nothing is selected, select the root node
-    if (!selected) {
-      console.log('here?');
-      
-      const newSelected = list.getHead();
-      setSelected(newSelected);
-      return;
-    }
-    // get next of currently selected
-    const next = selected.getNext();
-    console.log(next);
-    
-    // update current to next
-    // What if current has no next?
-    // setSelected(Object.assign({}, next));
+    // Find the node with id selected.
+    // Get it's "next". 
+    // if next exists, set next's id to selected.
+    // else, do nothing.
+
+    // this is a hacky way to move the id along
+    setSelected(selected + 1);
   };
+  const handleLeft = () => {
+    setSelected(selected - 1)
+  }
 
   return (
     <HotKeys
       keyMap={{ LEFT: "left", RIGHT: "right", UP: "up", DOWN: "down" }}
       handlers={{
-        RIGHT: handleRight
+        RIGHT: handleRight // Something funny's going on with this handler.
       }}
     >
       <div className="App">
@@ -98,6 +91,9 @@ const App = () => {
           </div>
           <button>Add</button>
         </form>
+        <p>Selected: {selected}</p>
+        <button onClick={handleLeft}>Left</button>
+        <button onClick={handleRight}>Right</button>
         <Container handleClick={handleMapClick}>
           <g
             onClick={e => {
@@ -116,7 +112,7 @@ const App = () => {
                 key={n.getId()}
                 cx={n.getData()[0]}
                 cy={n.getData()[1]}
-                r={5}
+                r={n.getId() === selected ? 7 : 5}
                 fill={"white"}
               />
             ))}
