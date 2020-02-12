@@ -59,13 +59,15 @@ const App = () => {
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
   const append = () => {
-    const node = createNode(id++);
+    const newId = id++;
+    const node = createNode(newId);
     const last = row.getLast();
     const point = last.getData();
     const newPoint = [point[0] + 15, point[1]];
     node.setData(newPoint);
     row.append(node);
     const newRow = Object.assign({}, row);
+    setSelected(newId);
     setRow(newRow);
   };
   const handleNext = () => {
@@ -98,6 +100,8 @@ const App = () => {
     const newRow = Object.assign({}, row);
     setRow(newRow);
   };
+
+  console.log(selected);
 
   const selectedNode = row.find(selected);
   const selectedPoint = selectedNode.getData();
@@ -135,9 +139,7 @@ const App = () => {
         </button>
         <button onClick={() => handleNudge(Direction.LEFT)}>Nudge left</button>
         <button onClick={() => handleNudge(Direction.UP)}>Nudge up</button>
-        <button onClick={() => handleNudge(Direction.DOWN)}>
-          Nudge down
-        </button>
+        <button onClick={() => handleNudge(Direction.DOWN)}>Nudge down</button>
         <Container handleClick={handleMapClick}>
           <g
             onClick={e => {
