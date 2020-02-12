@@ -4,6 +4,7 @@ import { createList, createNode } from "./linked-list";
 
 import "./App.css";
 import { Editor } from "./components/Editor";
+import { Direction } from "./types/types";
 
 let id = 0;
 
@@ -18,23 +19,11 @@ const list = createList(n1);
 list.append(n2);
 list.append(n3);
 
-const rowToLineData = (rowArray: any[]) => {
-  return rowArray
-    .map(node => {
-      const point = node.getData();
-      return `${point[0]},${point[1]}`;
-    })
-    .join(" ");
-};
-
 const App = () => {
   const [inputX, setInputX] = useState();
   const [inputY, setInputY] = useState();
   const [row, setRow] = useState(list);
   const [selected, setSelected] = useState(0);
-
-  const rowNodes = row.toArray();
-  const lineData = rowToLineData(rowNodes);
 
   // Handlers
   const handleUpdateClick = (e: any) => {
@@ -83,14 +72,8 @@ const App = () => {
     // To fix once node.prev() is implemented.
     setSelected(Math.max(selected - 1, 0));
   };
-  enum Direction {
-    RIGHT = "right",
-    LEFT = "left",
-    UP = "up",
-    DOWN = "down"
-  }
   const handleNudge = (direction: Direction) => {
-    const node = list.find(selected);
+    const node = row.find(selected);
     const point = node.getData();
     const xOffset =
       direction === Direction.RIGHT ? 5 : direction === Direction.LEFT ? -5 : 0;
@@ -102,8 +85,6 @@ const App = () => {
     setRow(newRow);
   };
 
-  console.log(selected);
-
   const selectedNode = row.find(selected);
   const selectedPoint = selectedNode.getData();
 
@@ -113,15 +94,27 @@ const App = () => {
       handlers={{
         APPEND: append,
         RIGHT: () => handleNudge(Direction.RIGHT),
-        L: () => handleNudge(Direction.RIGHT),
+        L: () => handleNudge(Direction.RIGHT)
       }}
     >
       <div className="App">
         {selected}
-        <Editor handlers={{
-          handleNext,
-          handlePrev,
-        }} />
+        <Editor
+          handlers={{
+            handleNext,
+            handlePrev,
+            handleUpdateClick,
+            handleMapClick,
+            handleXChange,
+            handleYChange,
+            handleNudge
+          }}
+          state={{
+            selected,
+            selectedPoint,
+            row
+          }}
+        />
       </div>
     </HotKeys>
   );
