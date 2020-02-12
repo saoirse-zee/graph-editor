@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { HotKeys } from "react-hotkeys";
 import { createList, createNode } from "./linked-list";
 import Container from "./components/Container";
 import "./App.css";
@@ -27,10 +28,11 @@ const App = () => {
   const [inputX, setInputX] = useState();
   const [inputY, setInputY] = useState();
   const [row, setRow] = useState(list);
+  const [selected, setSelected] = useState();
+  console.log(selected && selected.getData());
 
   const rowNodes = row.toArray();
   const lineData = rowToLineData(rowNodes);
-  console.log(lineData);
 
   // Handlers
   const handleAddClick = (e: any) => {
@@ -56,45 +58,70 @@ const App = () => {
     const value = parseInt(e.target.value);
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
+  const handleRight = () => {
+    console.log("right");
+    // If nothing is selected, select the root node
+    if (!selected) {
+      console.log('here?');
+      
+      const newSelected = list.getHead();
+      setSelected(newSelected);
+      return;
+    }
+    // get next of currently selected
+    const next = selected.getNext();
+    console.log(next);
+    
+    // update current to next
+    // What if current has no next?
+    // setSelected(Object.assign({}, next));
+  };
 
   return (
-    <div className="App">
-      <form onSubmit={handleAddClick}>
-        <div>
-          <label>x</label>
-          <input onChange={handleXChange} />
-        </div>
-        <div>
-          <label>y</label>
-          <input onChange={handleYChange} />
-        </div>
-        <button>Add</button>
-      </form>
-      <Container handleClick={handleMapClick}>
-        <g
-          onClick={e => {
-            console.log(e);
-          }}
-        >
-          <polyline
-            points={lineData}
-            fill="none"
-            stroke="white"
-            strokeWidth={3}
-            opacity={0.3}
-          />
-          {rowNodes.map((n, i) => (
-            <circle
-              key={i}
-              cx={n.getData()[0]}
-              cy={n.getData()[1]}
-              r={5}
-              fill={"white"}
+    <HotKeys
+      keyMap={{ LEFT: "left", RIGHT: "right", UP: "up", DOWN: "down" }}
+      handlers={{
+        RIGHT: handleRight
+      }}
+    >
+      <div className="App">
+        <form onSubmit={handleAddClick}>
+          <div>
+            <label>x</label>
+            <input onChange={handleXChange} />
+          </div>
+          <div>
+            <label>y</label>
+            <input onChange={handleYChange} />
+          </div>
+          <button>Add</button>
+        </form>
+        <Container handleClick={handleMapClick}>
+          <g
+            onClick={e => {
+              console.log(e);
+            }}
+          >
+            <polyline
+              points={lineData}
+              fill="none"
+              stroke="white"
+              strokeWidth={3}
+              opacity={0.3}
             />
-          ))}
-        </g>
-      </Container>
-    </div>
+            {rowNodes.map((n, i) => (
+              <circle
+                key={i}
+                cx={n.getData()[0]}
+                cy={n.getData()[1]}
+                r={5}
+                fill={"white"}
+              />
+            ))}
+          </g>
+        </Container>
+      </div>
+    </HotKeys>
   );
 };
 
