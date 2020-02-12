@@ -2,8 +2,6 @@
  * Linked list - Implementation in functional style... I hope! 🤷🏻‍♀️
  */
 
-const n = require("./node");
-
 const createList = head => {
   let _head = head;
   const getHead = () => _head;
@@ -30,11 +28,22 @@ const createList = head => {
     string += currentNode.getData();
     return string;
   };
+  const toArray = () => {
+    const array = [];
+    let currentNode = _head;
+    while (currentNode.getNext()) {
+      array.push(currentNode);
+      currentNode = currentNode.getNext();
+    }
+    array.push(currentNode);
+    return array;
+  };
   return {
     getHead,
     getLast,
     append,
-    stringify
+    stringify,
+    toArray
   };
 };
 

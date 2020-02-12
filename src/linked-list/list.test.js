@@ -79,3 +79,22 @@ test('stringify creates a pretty string representation of the list', () => {
   const string = list.stringify()
   expect(string).toBe('root -> 1 -> 2 -> 3')
 })
+
+test('toArray converts the list to an array', () => {
+  const root = createNode();
+  const n1 = createNode()
+  const n2 = createNode()
+  const n3 = createNode()
+
+  root.setData("root");
+  n1.setData('1')
+  n2.setData('2')
+  n3.setData('3')
+  
+  const list = createList(root);
+  list.append(n1)
+  list.append(n2)
+  list.append(n3)
+  const array = list.toArray()
+  expect(array.length).toBe(4)
+})
