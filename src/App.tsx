@@ -59,6 +59,16 @@ const App = () => {
     const value = parseInt(e.target.value);
     setInputY(isNaN(value) ? 0 : value); // Default to zero.
   };
+  const append = () => {
+    const node = createNode(id++);
+    const last = row.getLast();
+    const point = last.getData();
+    const newPoint = [point[0] + 15, point[1]];
+    node.setData(newPoint);
+    row.append(node);
+    const newRow = Object.assign({}, row);
+    setRow(newRow);
+  };
   const handleRight = () => {
     const current = list.find(selected);
     const next = current.getNext();
@@ -67,14 +77,16 @@ const App = () => {
     }
   };
   const handleLeft = () => {
-    setSelected(selected - 1);
+    // This is super hacky and relies on the id scheme.
+    // To fix once node.prev() is implemented.
+    setSelected(Math.max(selected - 1, 0));
   };
 
   return (
     <HotKeys
-      keyMap={{ LEFT: "left", RIGHT: "right", UP: "up", DOWN: "down" }}
+      keyMap={{ APPEND: "a" }}
       handlers={{
-        RIGHT: handleRight // Something funny's going on with this handler.
+        APPEND: append
       }}
     >
       <div className="App">
