@@ -36,11 +36,10 @@ const App = () => {
   const lineData = rowToLineData(rowNodes);
 
   // Handlers
-  const handleAddClick = (e: any) => {
+  const handleUpdateClick = (e: any) => {
     e.preventDefault();
-    const node = createNode(id++);
+    const node = list.find(selected);
     node.setData([inputX, inputY]);
-    row.append(node);
     const newRow = Object.assign({}, row);
     setRow(newRow);
   };
@@ -69,18 +68,39 @@ const App = () => {
     const newRow = Object.assign({}, row);
     setRow(newRow);
   };
-  const handleRight = () => {
+  const handleNext = () => {
     const current = list.find(selected);
     const next = current.getNext();
     if (next) {
       setSelected(next.getId());
     }
   };
-  const handleLeft = () => {
+  const handlePrev = () => {
     // This is super hacky and relies on the id scheme.
     // To fix once node.prev() is implemented.
     setSelected(Math.max(selected - 1, 0));
   };
+  enum Direction {
+    RIGHT = "right",
+    LEFT = "left",
+    UP = "up",
+    DOWN = "down"
+  }
+  const handleNudge = (direction: Direction) => {
+    const node = list.find(selected);
+    const point = node.getData();
+    const xOffset =
+      direction === Direction.RIGHT ? 5 : direction === Direction.LEFT ? -5 : 0;
+    const yOffset =
+      direction === Direction.UP ? -5 : direction === Direction.DOWN ? 5 : 0;
+    const newPoint = [point[0] + xOffset, point[1] + yOffset];
+    node.setData(newPoint);
+    const newRow = Object.assign({}, row);
+    setRow(newRow);
+  };
+
+  const selectedNode = row.find(selected);
+  const selectedPoint = selectedNode.getData();
 
   return (
     <HotKeys
@@ -90,20 +110,34 @@ const App = () => {
       }}
     >
       <div className="App">
-        <form onSubmit={handleAddClick}>
-          <div>
-            <label>x</label>
-            <input onChange={handleXChange} />
+        <div style={{ display: "flex", fontFamily: "monospace" }}>
+          <div style={{ marginRight: 50 }}>
+            <p>Selected: {selected}</p>
+            <p>x: {selectedPoint && selectedPoint[0]}</p>
+            <p>y: {selectedPoint && selectedPoint[1]}</p>
           </div>
-          <div>
-            <label>y</label>
-            <input onChange={handleYChange} />
-          </div>
-          <button>Add</button>
-        </form>
-        <p>Selected: {selected}</p>
-        <button onClick={handleLeft}>Left</button>
-        <button onClick={handleRight}>Right</button>
+          <form onSubmit={handleUpdateClick}>
+            <div>
+              <label>x</label>
+              <input onChange={handleXChange} />
+            </div>
+            <div>
+              <label>y</label>
+              <input onChange={handleYChange} />
+            </div>
+            <button>Update</button>
+          </form>
+        </div>
+        <button onClick={handlePrev}>Prev</button>
+        <button onClick={handleNext}>Next</button>
+        <button onClick={() => handleNudge(Direction.RIGHT)}>
+          Nudge right
+        </button>
+        <button onClick={() => handleNudge(Direction.LEFT)}>Nudge left</button>
+        <button onClick={() => handleNudge(Direction.UP)}>Nudge up</button>
+        <button onClick={() => handleNudge(Direction.DOWN)}>
+          Nudge down
+        </button>
         <Container handleClick={handleMapClick}>
           <g
             onClick={e => {
